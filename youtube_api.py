@@ -4,8 +4,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("YOUTUBE_API_KEY")
-
+if "YOUTUBE_API_KEY" in st.secrets:
+    api_key = st.secrets["YOUTUBE_API_KEY"]
+# 2. If not there, try the local environment (for VS Code/Local dev)
+elif os.getenv("YOUTUBE_API_KEY"):
+    api_key = os.getenv("YOUTUBE_API_KEY")
+# 3. Only if both fail, show the error
+else:
+    st.error("API Key Missing! Please add YOUTUBE_API_KEY to Streamlit Secrets.")
+    st.stop()
 if not API_KEY:
     raise ValueError("YOUTUBE_API_KEY not found in .env")
 
